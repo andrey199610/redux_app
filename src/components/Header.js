@@ -9,10 +9,10 @@ export default function Header() {
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
       <Navbar.Collapse className="justify-content-end">
         <Nav>
-          <LinkContainer exact to="/">
+          <LinkContainer to="/post">
             <Nav.Link>Post</Nav.Link>
           </LinkContainer>
-          <LinkContainer to="/Works">
+          <LinkContainer to="/signup">
             <Nav.Link>Sign Up</Nav.Link>
           </LinkContainer>
         </Nav>
