@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Form, Button } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
-import { addNewPost } from '../../reduxToolkit/PostSlice'
+import { addNewPost } from '../reduxToolkit/PostSlice'
 
 const initialState = {
   title: '',
@@ -33,7 +33,7 @@ export const AddPostForm = () => {
       }
     }
   }
-
+  console.log('sdfsd')
   return (
     <div>
       <h3 style={{ textAlign: 'center' }}>Create new Post</h3>
