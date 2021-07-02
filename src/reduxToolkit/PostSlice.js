@@ -1,15 +1,21 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import axios from 'axios'
+import axios from '../plugins/axios'
 
 export const getPosts = createAsyncThunk(
   'posts/fetchAllPosts',
   async (skip) => {
-    const response = await axios.get(
-      `https://nodejs-test-api-blog.herokuapp.com/api/v1/posts?&skip=${skip}`
-    )
+    const response = await axios.get(`/posts?&skip=${skip}`)
     return response.data
   }
 )
+export const addNewPost = createAsyncThunk('/posts', async (initialPost) => {
+  const response = await axios.post(`/posts`, initialPost, {
+    headers: {
+      Authorization: 'Bearer ' + localStorage.getItem('token'),
+    },
+  })
+  return response.data
+})
 
 const postSlice = createSlice({
   name: 'posts',
@@ -31,6 +37,9 @@ const postSlice = createSlice({
     [getPosts.rejected]: (state, action) => {
       state.loading = true
       state.error = action.error.message
+    },
+    [addNewPost.fulfilled]: (state, action) => {
+      state.posts.unshift(action.payload)
     },
   },
 })

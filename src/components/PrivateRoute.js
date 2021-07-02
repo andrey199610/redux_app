@@ -1,0 +1,18 @@
+import React from 'react'
+import { Route, Redirect } from 'react-router-dom'
+
+import { useSelector } from 'react-redux'
+
+const PrivateRoute = ({ component: Component, authed, ...rest }) => {
+  const { auth } = useSelector((state) => state.signup)
+
+  return (
+    <Route
+      {...rest}
+      render={(props) =>
+        auth ? <Component {...props} /> : <Redirect to="/signin" />
+      }
+    />
+  )
+}
+export default PrivateRoute
