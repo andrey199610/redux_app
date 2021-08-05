@@ -1,41 +1,41 @@
 import React, { useState } from 'react'
 import { Form, Button } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
-import { addNewPost } from '../../reduxToolkit/PostSlice'
+import { updatePostState, updatePost } from '../../reduxToolkit/PostSlice'
 import { useHistory } from 'react-router-dom'
 
-const initialState = {
-  title: '',
-  fullText: '',
-  description: '',
-}
-
-const AddPostForm = () => {
-  const { auth } = useSelector((state) => state.signup)
-  const [createpost, setCreatepost] = useState(initialState)
-  const { addPostError } = useSelector((state) => state.posts)
-  const dispatch = useDispatch()
+const EditPostForm = ({ match }) => {
   const history = useHistory()
-
-  const handleChange = (e) => {
-    setCreatepost((oldState) => ({
-      ...oldState,
-      [e.target.name]: e.target.value,
-    }))
+  const { postId } = match.params
+  const post = useSelector((state) =>
+    state.posts.posts.find((post) => post._id === postId)
+  )
+  const initialState = {
+    title: post?.title,
+    fullText: post?.fullText,
+    description: post?.description,
   }
 
-  const onSavePostClicked = (e) => {
+  const [updatepoststate, setUpdatepoststate] = useState(initialState)
+  const dispatch = useDispatch()
+
+  const handleChange = (e) => {
+    setUpdatepoststate({
+      ...updatepoststate,
+      [e.target.name]: e.target.value,
+    })
+  }
+
+  const onEditPostClicked = (e) => {
     e.preventDefault()
-    if (auth && createpost.fullText.length > 20 && !addPostError) {
-      dispatch(addNewPost(createpost))
-      setCreatepost(initialState)
-      history.push('/post')
-    }
+    dispatch(updatePostState({ postId, updatepoststate }))
+    dispatch(updatePost({ postId, updatepoststate }))
+    history.push('/post')
   }
 
   return (
     <div>
-      <h3 style={{ textAlign: 'center' }}>Create new Post</h3>
+      <h3 style={{ textAlign: 'center', marginTop: '50px' }}>Edit Post</h3>
       <Form style={{ width: '50%', margin: 'auto' }} validated={true}>
         <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Label>Title</Form.Label>
@@ -46,7 +46,7 @@ const AddPostForm = () => {
             placeholder="Enter email"
             minLength={5}
             required
-            value={createpost.title}
+            value={updatepoststate.title}
           />
           <Form.Text className="text-muted"></Form.Text>
         </Form.Group>
@@ -59,7 +59,7 @@ const AddPostForm = () => {
             placeholder="Enter Name"
             minLength={21}
             required
-            value={createpost.fullText}
+            value={updatepoststate.fullText}
           />
           <Form.Text className="text-muted"></Form.Text>
         </Form.Group>
@@ -67,7 +67,7 @@ const AddPostForm = () => {
           <Form.Label>description</Form.Label>
           <Form.Control
             onChange={handleChange}
-            value={createpost.description}
+            value={updatepoststate.description}
             name="description"
             type="text"
             placeholder="description"
@@ -75,11 +75,11 @@ const AddPostForm = () => {
             required
           />
         </Form.Group>
-        <Button variant="primary" type="submit" onClick={onSavePostClicked}>
+        <Button variant="primary" type="submit" onClick={onEditPostClicked}>
           Submit
         </Button>
       </Form>
     </div>
   )
 }
-export default AddPostForm
+export default EditPostForm

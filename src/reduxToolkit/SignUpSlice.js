@@ -25,6 +25,7 @@ const signupSlice = createSlice({
     error: null,
     success: false,
     auth: !!localStorage.getItem('token'),
+    currentuser: JSON.parse(localStorage.getItem('currentuser')),
   },
   extraReducers: {
     [getSignUpSlice.pending]: (state, action) => {
@@ -50,7 +51,11 @@ const signupSlice = createSlice({
     signin: (state, action) => {
       state.auth = action.payload
     },
+    updateUser: (state, action) => {
+      state.currentuser = action.payload
+      localStorage.setItem('currentuser', JSON.stringify(action.payload))
+    },
   },
 })
-export const { reset, signin } = signupSlice.actions
+export const { reset, signin, updateUser } = signupSlice.actions
 export default signupSlice.reducer

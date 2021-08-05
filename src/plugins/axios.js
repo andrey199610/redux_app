@@ -5,8 +5,15 @@ const instance = axios.create({
   timeout: 5000,
   headers: {
     'Content-type': 'application/json',
-    Authorization: 'Bearer ' + localStorage.getItem('token'),
   },
+})
+
+instance.interceptors.request.use((instance) => {
+  const token = localStorage.getItem('token')
+  if (token) {
+    instance.headers['Authorization'] = 'Bearer ' + token
+  }
+  return instance
 })
 
 export default instance

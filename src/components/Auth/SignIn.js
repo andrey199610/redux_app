@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { Form, Button } from 'react-bootstrap'
-import axios from 'axios'
+import axios from '../../plugins/axios'
 import { useHistory } from 'react-router-dom'
-import { signin } from '../../reduxToolkit/SignUpSlice'
-import { useDispatch, useSelector } from 'react-redux'
+import { signin, updateUser } from '../../reduxToolkit/SignUpSlice'
+import { useDispatch } from 'react-redux'
 
 const regular =
   /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
@@ -11,27 +11,42 @@ const regular =
 export default function SignIn() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [validated, setValidated] = useState(false)
-  const { auth } = useSelector((state) => state.signup)
+  const [validated, setValidated] = useState('')
+  const [error, setError] = useState(null)
   const dispatch = useDispatch()
   const history = useHistory()
 
   const SignIn = async (e) => {
     e.preventDefault()
-    if (validated) {
-      const login = await axios.post(
-        `https://nodejs-test-api-blog.herokuapp.com/api/v1/auth`,
-        { email: email, password: password }
-      )
-      const token = login.data.token
-      if (token) {
-        dispatch(signin(true))
-        localStorage.setItem('email', email)
-        localStorage.setItem('token', token)
-        setEmail('')
-        setPassword('')
-        history.push('/post')
+    try {
+      if (validated) {
+        const login = await axios.post(`/auth`, {
+          email: email,
+          password: password,
+        })
+        const token = login.data.token
+        addTokenLocal(token)
+        currentUserFetch()
       }
+    } catch (e) {
+      setError(e.response.data.error)
+    }
+  }
+
+  const currentUserFetch = async () => {
+    if (validated) {
+      const user = await axios.get(`/auth/user`)
+      return dispatch(updateUser(user.data))
+    }
+  }
+
+  const addTokenLocal = (token) => {
+    if (token) {
+      dispatch(signin(true))
+      localStorage.setItem('token', token)
+      setEmail('')
+      setPassword('')
+      history.push('/profile')
     }
   }
 
@@ -60,22 +75,6 @@ export default function SignIn() {
     formValidaton()
   })
 
-  const logout = () => {
-    dispatch(signin(false))
-    localStorage.removeItem('token')
-    localStorage.removeItem('email')
-    history.push('/signin')
-  }
-
-  if (auth) {
-    return (
-      <div>
-        <h1>Congratulations {localStorage.getItem('email')}</h1>
-        <Button onClick={logout}>Logout</Button>
-      </div>
-    )
-  }
-
   return (
     <div
       style={{
@@ -86,11 +85,13 @@ export default function SignIn() {
       }}
     >
       <h1 style={{ marginBottom: '20px' }}>Sign In</h1>
+      <h5 style={{ color: 'red' }}>{error ? error : null}</h5>
       <Form style={{ width: '50%' }} validated={true}>
         <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Label>Email address</Form.Label>
           <Form.Control
             minLength={6}
+            maxLength={20}
             required
             onChange={(e) => setEmail(e.target.value)}
             value={email}
@@ -109,6 +110,7 @@ export default function SignIn() {
             placeholder="Password"
             required
             minLength={6}
+            maxLength={12}
           />
         </Form.Group>
         <Button

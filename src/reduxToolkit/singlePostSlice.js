@@ -29,6 +29,14 @@ const postSlice = createSlice({
       state.error = action.error.message
     },
   },
+  reducers: {
+    likePostState: (state, action) => {
+      state.post.likes.push(action.payload)
+    },
+    unlikePostState: (state, action) => {
+      state.post.likes = state.post.likes.filter((id) => id !== action.payload)
+    },
+  },
 })
-
+export const { likePostState, unlikePostState } = postSlice.actions
 export default postSlice.reducer

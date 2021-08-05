@@ -28,8 +28,9 @@ export default function SignUp() {
     }
     return false
   }
+
   const validationName = (name) => {
-    if (password.length >= 6) {
+    if (name.length >= 6) {
       return true
     }
     return false

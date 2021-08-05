@@ -2,7 +2,7 @@ import React from 'react'
 import { Navbar, Nav } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { LinkContainer } from 'react-router-bootstrap'
-import { signin } from '../reduxToolkit/SignUpSlice'
+import { signin, updateUser } from '../reduxToolkit/SignUpSlice'
 
 export default function Header() {
   const dispatch = useDispatch()
@@ -10,8 +10,9 @@ export default function Header() {
 
   const logout = () => {
     localStorage.removeItem('token')
-    localStorage.removeItem('email')
     dispatch(signin(false))
+    dispatch(updateUser(null))
+    localStorage.removeItem('currentuser')
   }
 
   return (
@@ -30,9 +31,14 @@ export default function Header() {
       <Navbar.Collapse className="justify-content-end">
         <Nav className="align-items-center">
           {auth ? (
-            <LinkContainer to="/createpost">
-              <Nav.Link>Create</Nav.Link>
-            </LinkContainer>
+            <>
+              <LinkContainer to="/createpost">
+                <Nav.Link>Create</Nav.Link>
+              </LinkContainer>
+              <LinkContainer to="/profile">
+                <Nav.Link>Profile</Nav.Link>
+              </LinkContainer>
+            </>
           ) : null}
           <LinkContainer to="/post">
             <Nav.Link>Post</Nav.Link>
