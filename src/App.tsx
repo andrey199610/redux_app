@@ -11,7 +11,7 @@ import PrivateRoute from './components/PrivateRoute'
 import Profile from './components/Profile'
 import EditPostForm from './components/PagePost/EditPostForm'
 
-function App() {
+const App: React.FC = () => {
   return (
     <Router>
       <Header />

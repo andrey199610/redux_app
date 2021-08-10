@@ -3,7 +3,7 @@ import moment from 'moment'
 import { useSelector } from 'react-redux'
 import DndUpdateFiles from './PagePost/DndUpdateFile'
 
-export default function Profile() {
+const Profile: React.FC = () => {
   const { currentuser } = useSelector((state) => state.signup)
 
   return (
@@ -41,3 +41,4 @@ export default function Profile() {
     </div>
   )
 }
+export default Profile
