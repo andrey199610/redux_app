@@ -130,3 +130,134 @@ export default function SignUp() {
     </div>
   )
 }
+
+// import React, { useState } from 'react'
+// import { useFormik } from 'formik'
+// import * as Yup from 'yup'
+// import axios from 'axios'
+
+// export default function SignUp() {
+//   const [error, setError] = useState(null)
+//   const [focus, setFocus] = useState(true)
+
+//   const formik = useFormik({
+//     initialValues: {
+//       email: '',
+//       password: '',
+//       name: '',
+//     },
+
+//     validationSchema: Yup.object({
+//       email: Yup.string().email('Invalid email address').required('Required'),
+//       password: Yup.string()
+//         .min(5, 'Must be 5 characters or less')
+//         .max(15, 'Must be 15 characters or less')
+//         .required('Required'),
+//       name: Yup.string()
+//         .min(3, 'Must be 3 characters or less')
+//         .max(15, 'Must be 15 characters or less')
+//         .required('Required'),
+//     }),
+
+//     onSubmit: async (values) => {
+//       try {
+//         await axios.post(
+//           'https://nodejs-test-api-blog.herokuapp.com/api/v1/users',
+//           values
+//         )
+//         console.log(formik)
+//         formik.handleReset()
+//         setError(null)
+//       } catch (error) {
+//         console.log(formik)
+//         setError(error.response.data.error)
+//         formik.isValid = false
+//         console.log((formik.isValid = false))
+//       }
+//     },
+//   })
+//   console.log(formik.isValid)
+//   return (
+//     <form
+//       onSubmit={formik.handleSubmit}
+//       style={{
+//         display: 'flex',
+//         flexDirection: 'column',
+//         maxWidth: '300px',
+//         margin: 'auto',
+//         marginTop: '200px',
+//       }}
+//     >
+//       <h1 style={{ textAlign: 'center' }}>Sign UP</h1>
+//       <h3 style={{ color: 'red', textAlign: 'center' }}>{error}</h3>
+//       <div
+//         style={{
+//           display: 'flex',
+//           flexDirection: 'column',
+//           marginBottom: '20px',
+//         }}
+//       >
+//         <label htmlFor="email">Email Address</label>
+//         <input
+//           style={{ padding: '6px' }}
+//           id="email"
+//           name="email"
+//           type="email"
+//           onClick={() => setFocus(true)}
+//           onChange={formik.handleChange}
+//           onBlur={formik.handleBlur}
+//           value={formik.values.email}
+//         />
+//         {formik.touched.email && formik.errors.email ? (
+//           <div style={{ color: 'red' }}>{formik.errors.email}</div>
+//         ) : null}
+//       </div>
+//       <div
+//         style={{
+//           display: 'flex',
+//           flexDirection: 'column',
+//           marginBottom: '20px',
+//         }}
+//       >
+//         <label htmlFor="password">Password</label>
+//         <input
+//           style={{ padding: '6px' }}
+//           id="password"
+//           name="password"
+//           type="password"
+//           onChange={formik.handleChange}
+//           onBlur={formik.handleBlur}
+//           value={formik.values.password}
+//         />
+//         {formik.touched.password && formik.errors.password ? (
+//           <div style={{ color: 'red' }}>{formik.errors.password}</div>
+//         ) : null}
+//       </div>
+//       <div
+//         style={{
+//           display: 'flex',
+//           flexDirection: 'column',
+//           marginBottom: '20px',
+//         }}
+//       >
+//         <label htmlFor="firstName">Name</label>
+//         <input
+//           style={{ padding: '6px' }}
+//           id="name"
+//           name="name"
+//           type="text"
+//           onChange={formik.handleChange}
+//           onBlur={formik.handleBlur}
+//           value={formik.values.name}
+//         />
+//         {formik.touched.name && formik.errors.name ? (
+//           <div style={{ color: 'red' }}>{formik.errors.name}</div>
+//         ) : null}
+//       </div>
+//       <button
+//         type="submit"
+//         style={{ padding: '6px' }}
+//         disabled={!(formik.isValid && formik.dirty)}
+//       >
+//         Submit
+//       </button>
